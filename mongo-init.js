@@ -36,3 +36,4 @@ db.messages.insertMany([
 ]);
 
 print("✅ MongoDB initialization completed successfully!");
+
