@@ -22,6 +22,19 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.get("/", (req, res) => {
+  res.json({
+    message: "Dockerized Chat App Backend API",
+    status: "Running",
+    endpoints: {
+      auth: "/api/auth",
+      messages: "/api/messages",
+      friends: "/api/friends",
+      private: "/api/private",
+    },
+  });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/friends", friendsRoutes);
@@ -98,7 +111,8 @@ app.get("/health", (req, res) => {
   res.json({
     status: "healthy",
     services: {
-      database: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+      database:
+        mongoose.connection.readyState === 1 ? "connected" : "disconnected",
       kafka: "connected",
     },
   });
@@ -130,10 +144,13 @@ startServer().catch(console.error);
 // Graceful shutdown
 process.on("SIGTERM", async () => {
   console.log("SIGTERM signal received: closing HTTP server");
-  try { await getConsumer().disconnect(); } catch {}
-  try { await getProducer().disconnect(); } catch {}
+  try {
+    await getConsumer().disconnect();
+  } catch {}
+  try {
+    await getProducer().disconnect();
+  } catch {}
   server.close(() => {
     console.log("HTTP server closed");
   });
 });
-

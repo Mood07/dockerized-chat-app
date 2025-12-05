@@ -58,8 +58,7 @@ const FriendRequests = ({ token, onOpenPrivateChat }) => {
   };
 
   return (
-    <div className="friend-requests">
-      <h3>Friend Requests</h3>
+    <div className="friend-requests-content">
       {message && <p className="message">{message}</p>}
       {requests.length === 0 ? (
         <p>No pending requests</p>

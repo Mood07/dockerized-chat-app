@@ -3,7 +3,12 @@ import FriendRequests from "./FriendRequests";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
-const FriendsSidebar = ({ token, username, onOpenPrivateChat, onOpenGlobalChat }) => {
+const FriendsSidebar = ({
+  token,
+  username,
+  onOpenPrivateChat,
+  onOpenGlobalChat,
+}) => {
   const [users, setUsers] = useState([]);
   const [friends, setFriends] = useState([]);
   const [query, setQuery] = useState("");
@@ -39,10 +44,11 @@ const FriendsSidebar = ({ token, username, onOpenPrivateChat, onOpenGlobalChat }
     // initial
     fetchUsers();
     fetchFriends();
-    // light polling to reflect recent acceptances
+    // polling to reflect recent acceptances and new users
     const id = setInterval(() => {
+      fetchUsers();
       fetchFriends();
-    }, 5000);
+    }, 3000);
     return () => {
       cancelled = true;
       clearInterval(id);
@@ -74,7 +80,9 @@ const FriendsSidebar = ({ token, username, onOpenPrivateChat, onOpenGlobalChat }
   const roomIdFor = (a, b) => [a, b].sort().join("_");
   const initials = (name) => name.slice(0, 2).toUpperCase();
   const friendSet = new Set(friends.map((f) => f.username));
-  const filteredAll = users.filter((u) => u.username.toLowerCase().includes(query.toLowerCase()));
+  const filteredAll = users.filter((u) =>
+    u.username.toLowerCase().includes(query.toLowerCase())
+  );
   const others = filteredAll.filter((u) => !friendSet.has(u.username));
 
   return (
@@ -104,7 +112,9 @@ const FriendsSidebar = ({ token, username, onOpenPrivateChat, onOpenGlobalChat }
           <div
             key={user._id}
             className="contact-item"
-            onClick={() => onOpenPrivateChat(roomIdFor(username, user.username))}
+            onClick={() =>
+              onOpenPrivateChat(roomIdFor(username, user.username))
+            }
             title="Open private chat"
           >
             <div className="contact-avatar">{initials(user.username)}</div>
@@ -117,13 +127,21 @@ const FriendsSidebar = ({ token, username, onOpenPrivateChat, onOpenGlobalChat }
           <div
             key={user._id}
             className="contact-item"
-            onClick={() => onOpenPrivateChat(roomIdFor(username, user.username))}
+            onClick={() =>
+              onOpenPrivateChat(roomIdFor(username, user.username))
+            }
             title="Open private chat"
           >
             <div className="contact-avatar">{initials(user.username)}</div>
             <div className="contact-name">{user.username}</div>
             <div className="contact-actions">
-              <button className="add-btn" onClick={(e) => { e.stopPropagation(); sendRequest(user.username); }}>
+              <button
+                className="add-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  sendRequest(user.username);
+                }}
+              >
                 Add
               </button>
             </div>
@@ -132,7 +150,6 @@ const FriendsSidebar = ({ token, username, onOpenPrivateChat, onOpenGlobalChat }
       </div>
 
       <div className="friend-requests">
-        <h3>Friend Requests</h3>
         <FriendRequests token={token} onOpenPrivateChat={onOpenPrivateChat} />
       </div>
     </div>
