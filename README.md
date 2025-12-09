@@ -4,6 +4,9 @@ Grade 5.0 Project — Cloud‑oriented Web Applications Course
 
 A fully containerized, real‑time chat application using React (frontend), Node.js/Express (backend), MongoDB, Apache Kafka, and WebSockets. Everything runs with Docker Compose.
 
+## Changelog
+- Bug fixes applied to UI refresh, friend requests title duplication, and auth page background.
+
 ---
 
 ## 📋 Table of Contents
